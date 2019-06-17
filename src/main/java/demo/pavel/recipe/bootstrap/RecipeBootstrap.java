@@ -18,7 +18,9 @@ import demo.pavel.recipe.model.UnitOfMeasure;
 import demo.pavel.recipe.repositories.CategoryRepository;
 import demo.pavel.recipe.repositories.RecipeRepository;
 import demo.pavel.recipe.repositories.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -28,7 +30,6 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	private final UnitOfMeasureRepository unitOfMeasureRepository;
 
 	// constructors
-
 	public RecipeBootstrap(CategoryRepository categoryRepository,
 	                       RecipeRepository recipeRepository,
 	                       UnitOfMeasureRepository unitOfMeasureRepository) {
@@ -40,6 +41,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		recipeRepository.saveAll(getRecipes());
+		log.debug("Loading Bootstrap Data...");
 	}
 
 	private List<Recipe> getRecipes() {

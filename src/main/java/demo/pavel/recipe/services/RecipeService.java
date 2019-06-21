@@ -7,4 +7,6 @@ import demo.pavel.recipe.model.Recipe;
 public interface RecipeService {
 
 	Set<Recipe> findRecipes();
+
+	Recipe findRecipeById(Long id);
 }

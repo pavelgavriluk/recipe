@@ -1,8 +1,11 @@
 package demo.pavel.recipe.controllers;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -49,7 +52,15 @@ public class RecipeController {
 	}
 
 	@PostMapping("recipe")
-	public String saveOrUpdate(@ModelAttribute RecipeCommand command){
+	public String saveOrUpdate(@Valid @ModelAttribute("recipe") RecipeCommand command, BindingResult bindingResult){
+
+		if (bindingResult.hasErrors()){
+			bindingResult.getAllErrors().forEach(objectError -> {
+				log.debug(objectError.toString());
+			});
+
+			return "recipe/recipeform";
+		}
 		RecipeCommand savedCommand = recipeService.saveRecipeCommand(command);
 
 		return "redirect:/recipe/" + savedCommand.getId() + "/show";
@@ -75,21 +86,6 @@ public class RecipeController {
 
 		modelAndView.setViewName("404error");
 		modelAndView.addObject("exception", exception);
-
-		return modelAndView;
-	}
-
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(NumberFormatException.class)
-	public ModelAndView handleNumberFormatException(Exception exception) {
-
-		log.error("Handling number format exception");
-		log.error(exception.getMessage());
-
-		ModelAndView modelAndView = new ModelAndView();
-
-		modelAndView.setViewName("400error");
-		modelAndView.addObject("exception", "Input can not be converted to number!");
 
 		return modelAndView;
 	}

@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import demo.pavel.recipe.converters.RecipeCommandToRecipe;
 import demo.pavel.recipe.converters.RecipeToRecipeCommand;
+import demo.pavel.recipe.exceptions.NotFoundException;
 import demo.pavel.recipe.model.Recipe;
 import demo.pavel.recipe.repositories.RecipeRepository;
 
@@ -82,5 +83,17 @@ public class RecipeServiceImplTest {
 
 		//then
 		verify(recipeRepository, times(1)).deleteById(anyLong());
+	}
+
+	@Test(expected = NotFoundException.class)
+	public void getRecipeByIdTestNotFound() throws Exception {
+
+		Optional<Recipe> recipeOptional = Optional.empty();
+
+		when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+
+		Recipe recipeReturned = recipeService.findRecipeById(1L);
+
+		//should go boom
 	}
 }

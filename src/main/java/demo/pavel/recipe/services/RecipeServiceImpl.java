@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import demo.pavel.recipe.commands.RecipeCommand;
 import demo.pavel.recipe.converters.RecipeCommandToRecipe;
 import demo.pavel.recipe.converters.RecipeToRecipeCommand;
+import demo.pavel.recipe.exceptions.NotFoundException;
 import demo.pavel.recipe.model.Recipe;
 import demo.pavel.recipe.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class RecipeServiceImpl implements RecipeService{
 		Optional<Recipe> recipeOptional = recipeRepository.findById(id);
 
 		if(!recipeOptional.isPresent()){
-			throw new RuntimeException("The Recipe not found!");
+			throw new NotFoundException("The Recipe not found!");
 		}
 
 		return recipeOptional.get();
